@@ -14,3 +14,4 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
  # Liblary
  
  # Refs
+[30 phut reacts co ban](https://www.youtube.com/watch?v=Up3YNeLA6MQ)
