@@ -1,4 +1,4 @@
-## useState()
+## 1 useState()
 - Là 1 hook cơ bản
 - Giúp mình sử dụng state trong functional component
 
@@ -122,3 +122,46 @@ function ColorBox() {
 - useState() trả về một mảng 2 phần tử [name, setName].
 - useState() áp dụng replacing thay vì merging như bên class component.
 - Initial state callback chỉ thực thi 1 lần đầu.
+
+## 2 useEffect()
+[ref](https://reactjs.org/docs/hooks-effect.html)
+- useEffect là 1 hooks cơ bản
+- Sử dụng cho functional component
+- Được thự thi sau mỗi lần render
+- mỗi hook gồm `side effect` và `clean up (optional)`
+
+example
+```js
+function useEffect(callback, dependences) {}
+
+function App() {
+  // executed before each render
+  const [color, setColor] = useState('deeppink');
+  // executed after each render
+  useEffect(() => {
+    // do your side effect here ...
+    return () => {
+      // Clean up here ...
+      // Executed before the next render or unmount
+    };
+  }, dependences);
+  // rendering
+  return <h1>Easy Frontend</h1>;
+}
+
+dependences = null   -> luôn được chạy với mỗi lần render
+dependences = []     -> chạy đúng 1 lần so với lần render đầu tiên
+dependences = [demo] -> nếu demo thay đổi thì nó sẽ chạy sau lần render
+```
+
+```
+MOUNTING
+- rendering
+- run useEffect()
+UPDATING
+- rendering
+- run `useEffect() cleanup` nếu dependencies thay đổi.
+- run `useEffect()` nếu dependencies thay đổi.
+UNMOUNTING
+- run `useEffect() cleanup`.
+```
