@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
-import UseState from './example/UseState';
-import UseEffect from './example/UseEffect';
+import UseState from './hooks/UseState';
+import UseEffect from './hooks/UseEffect';
 
 ReactDOM.render(
   <React.StrictMode>
