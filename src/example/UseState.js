@@ -1,9 +1,5 @@
-import TodoList from "../components/TodoList";
 import "../index.css"
-import Textfield from '@atlaskit/textfield';
-import Button from "@atlaskit/button";
 import { useCallback, useEffect, useState } from "react";
-import { v4 } from "uuid";
 
 const COLOR = "COLOR"
 
