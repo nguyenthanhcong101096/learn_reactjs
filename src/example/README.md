@@ -125,6 +125,8 @@ function ColorBox() {
 
 ## 2 useEffect()
 [ref](https://reactjs.org/docs/hooks-effect.html)
+[ref](https://www.youtube.com/watch?v=zjUC_W7IOIc&list=PLeS7aZkL6GOsHNoyeEpeL8B1PnbKoQD9m&index=7)
+
 - useEffect là 1 hooks cơ bản
 - Sử dụng cho functional component
 - Được thự thi sau mỗi lần render
