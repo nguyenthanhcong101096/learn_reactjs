@@ -1,23 +1,29 @@
 import "../index.css"
-import { useCallback, useEffect, useState } from "react";
-import PropTypes from "prop-types";
-
+import { useCallback, useEffect, useRef, useState } from "react";
+import Textfield from '@atlaskit/textfield';
 function UseEffect() {
   const [listPost, setListPost] = useState([])
-  const [page, setPage] = useState(1)
   const [totalPage, setTotalPage] = useState(1)
+  const [filters, setFilters] = useState({ page: 1, limit: 10, title_like: "" })
+  const [queryStr, setQueryStr] = useState("")
+  const typingTimeOutRef = useRef(null)
 
   useEffect(() => {
-    getPostApi(page)
+    getPostApi(filters)
       .then((data) => {
         setListPost([...data["data"]])
         setTotalPage(parseInt(data["pagination"]["_totalRows"]))
 
-      })
-  }, [page]);
+        //TODO: loop deep filter -> render lien tuc
+        if (parseInt(data["pagination"]["_page"]) != filters.page) {
+          setFilters({ ...filters, page: parseInt(data["pagination"]["_page"]) })
+        }
 
-  const getPostApi = async (page) => {
-    const requestUrl = `http://js-post-api.herokuapp.com/api/posts?_limit=10&_page=${page}`;
+      })
+  }, [filters]);
+
+  const getPostApi = async () => {
+    const requestUrl = `http://js-post-api.herokuapp.com/api/posts?_limit=${filters.limit}&_page=${filters.page}&title_like=${filters.title_like}`;
     const response = await fetch(requestUrl);
     const responseJson = await response.json();
 
@@ -25,41 +31,45 @@ function UseEffect() {
   }
 
   const onNextPage = () => {
-    const count = page + 1
-
-    if (count >= totalPage) {
-      setPage(totalPage)
-    }
-    else {
-      setPage(count)
-    }
+    setFilters(prevState => { return { ...prevState, page: (prevState.page + 1) } });
   }
 
   const onPrevPage = () => {
-    const count = page - 1
+    setFilters(prevState => { return { ...prevState, page: (prevState.page - 1) } });
+  }
 
-    if (count == 0) {
-      setPage(1)
+  function onSubmit(e) {
+    setQueryStr(e.target.value)
+
+    if (typingTimeOutRef.current) {
+      clearTimeout(typingTimeOutRef.current)
     }
-    else {
-      setPage(count)
-    }
+
+    typingTimeOutRef.current = setTimeout(() => {
+      setFilters(prevState => { return { ...prevState, title_like: queryStr } });
+    }, 300)
   }
 
   return (
     <>
-      <p>Post List (page {page})</p>
+      <Textfield
+        name="add-todo"
+        placeholder="Input todo list"
+        value={queryStr}
+        onChange={onSubmit}
+      />
+      <p>Post List (page {filters.page})</p>
       <ul>
         {
           listPost.map(post =>
             <li key={post.id}>
               <img src={post.imageUrl} />
-              <p>{post.description}</p>
+              <h5>{post.description}</h5>
             </li>
           )
         }
-        <input type="button" value="Prev Page" disabled={page == 1} onClick={onPrevPage} />
-        <input type="button" value="Next Page" disabled={page == totalPage} onClick={onNextPage} />
+        <input type="button" value="Prev Page" disabled={filters.page == 1} onClick={onPrevPage} />
+        <input type="button" value="Next Page" disabled={filters.page == totalPage} onClick={onNextPage} />
       </ul>
     </>
   );
