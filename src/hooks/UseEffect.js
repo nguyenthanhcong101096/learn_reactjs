@@ -58,8 +58,8 @@ function UseEffect() {
             </li>
           )
         }
-        <input type="button" value="Prev Page" onClick={onPrevPage} />
-        <input type="button" value="Next Page" onClick={onNextPage} />
+        <input type="button" value="Prev Page" disabled={page == 1} onClick={onPrevPage} />
+        <input type="button" value="Next Page" disabled={page == totalPage} onClick={onNextPage} />
       </ul>
     </>
   );
