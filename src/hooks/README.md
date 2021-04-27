@@ -167,3 +167,71 @@ UPDATING
 UNMOUNTING
 - run `useEffect() cleanup`.
 ```
+
+## useCallback()
+> Là 1 react hookhook giúp tạo ra 1 `memoized callback` và chỉ tạo ra callback khi có dependences thay đổi
+
+- Nhận vào 2 tham số: 1 là function, 2 là dependencies.
+- Return memoized callback
+- Chỉ tạo ra function mới khi dependencies thay đổi.
+- Nếu dùng empty dependencies thì không bao giờ tạo ra function mới.
+
+```js
+// Mỗi lần App re-render
+// --> tạo ra một function mới
+// --> Chart bị re-render
+function App() {
+  const handleChartTypeChange = (type) => {}
+  return <Chart onTypeChange={handleChartTypeChange} />;
+}
+```
+
+```js
+// Mỗi lần App re-render
+// --> nhờ có useCallback() nó chỉ tạo function một lần đầu
+// --> Nên Chart ko bị re-render.
+function App() {
+  const handleChartTypeChange = useCallback((type) => {}, [])
+  return <Chart onTypeChange={handleChartTypeChange} />;
+}
+```
+
+## useMemo()
+> Là một react hooks giúp mình tạo ra một memoized value và chỉ tính toán ra value mới khi
+> dependencies thay đổi.
+
+- Nhận vào 2 tham số: 1 là function, 2 là dependencies.
+- Return memoized value
+- Chỉ tính toán value mới khi dependencies thay đổi.
+- Nếu dùng empty dependencies thì không bao giờ tính toán lại value mới.
+
+```js
+// Mỗi lần App re-render
+// --> tạo ra một mảng mới
+// --> Chart bị re-render do props thay đổi
+function App() {
+  const data = [{}, {}, {}];
+  return <Chart data={data} />;
+}
+```
+
+```js
+// Mỗi lần App re-render
+// --> nhờ có useMemo() nó chỉ tạo ra cái mảng 1 lần đầu
+// --> Nên Chart ko bị re-render.
+function App() {
+  const data = useMemo(() => [{}, {}, {}], [])
+  return <Chart data={data} />;
+}
+```
+
+###  So sánh useCallback() vs useMemo()
+GIỐNG NHAU
+- Đều áp dụng kĩ thuật memoization.
+- Đều nhận vào 2 tham số: function và dependencies.
+- Đều là react hooks, dùng cho functional component.
+- Dùng để hạn chế những lần re-render dư thừa (micro improvements).
+
+KHÁC NHAU
+- useCallback return memoized callback
+- useMemo return memoized value
